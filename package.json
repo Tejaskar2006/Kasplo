@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
+    "migrate": "node scripts/migrate.js",
     "test": "echo \"Tests will be added in a later step\" && exit 0"
   },
   "engines": {

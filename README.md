@@ -2,18 +2,20 @@
 
 REST API for creating email campaigns, managing recipients, scheduling sends, and tracking statistics. Built with **Node.js**, **Express**, and **MySQL**.
 
-## Step 1 — Initial setup (current)
-
-This step includes:
+## Step 1 — Initial setup (done)
 
 - Express application bootstrap
 - Environment-based configuration (via `.env`)
 - MySQL connection pool (`mysql2`)
-- Structured logging
-- Consistent JSON error responses
-- Health endpoints to verify the app and database
+- Structured logging, JSON errors, health endpoints
 
-Campaign APIs, migrations, and tests will be added in later steps.
+## Step 2 — Database schema & migrations (current)
+
+- SQL migration: `migrations/001_initial_schema.sql`
+- Migration runner: `npm run migrate` (tracks applied files in `schema_migrations`)
+- Design notes: [docs/DATABASE.md](docs/DATABASE.md)
+
+Tables: `campaigns`, `campaign_recipients`, `schema_migrations`.
 
 ## Prerequisites
 
@@ -36,7 +38,13 @@ Campaign APIs, migrations, and tests will be added in later steps.
 
    Do **not** commit `.env` or real passwords to Git.
 
-3. Start the server:
+3. Run database migrations:
+
+   ```bash
+   npm run migrate
+   ```
+
+4. Start the server:
 
    ```bash
    npm run dev
@@ -56,18 +64,18 @@ Campaign APIs, migrations, and tests will be added in later steps.
 ## Project structure
 
 ```
+migrations/           # Versioned SQL migrations
+scripts/
+  migrate.js          # Apply pending migrations
+docs/
+  DATABASE.md         # Schema & design notes
 src/
-  app.js              # Express app
-  server.js           # Entry point, graceful shutdown
+  app.js
+  server.js
   config/
-    env.js            # Load & validate env
-    database.js       # MySQL pool
   middleware/
-    errorHandler.js
   routes/
-    health.routes.js
   utils/
-    logger.js
 ```
 
 ## Environment variables
@@ -86,7 +94,7 @@ src/
 ## Roadmap (assignment steps)
 
 1. Initial setup — **done**
-2. Database schema & migrations
+2. Database schema & migrations — **done**
 3. Campaign create & validation
 4. Recipients API
 5. Schedule & process simulation
