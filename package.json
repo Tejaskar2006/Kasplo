@@ -1,0 +1,21 @@
+{
+  "name": "kasplo-email-campaign-api",
+  "version": "1.0.0",
+  "description": "REST API for email campaign management",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "echo \"Tests will be added in a later step\" && exit 0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["email", "campaign", "api", "express", "mysql"],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.14.0"
+  }
+}
