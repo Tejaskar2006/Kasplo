@@ -8,6 +8,19 @@ function notFoundHandler(_req, res) {
   });
 }
 
+function jsonParseErrorHandler(err, _req, res, next) {
+  if (err.type === 'entity.parse.failed' || err instanceof SyntaxError) {
+    return res.status(400).json({
+      success: false,
+      error: {
+        code: 'INVALID_JSON',
+        message: 'Request body must be valid JSON',
+      },
+    });
+  }
+  return next(err);
+}
+
 function errorHandler(err, _req, res, _next) {
   const status = err.statusCode || 500;
   const hideMessage = status === 500;
@@ -31,4 +44,4 @@ function errorHandler(err, _req, res, _next) {
   });
 }
 
-module.exports = { notFoundHandler, errorHandler };
+module.exports = { notFoundHandler, jsonParseErrorHandler, errorHandler };

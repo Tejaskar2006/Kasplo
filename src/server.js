@@ -19,6 +19,17 @@ async function start() {
     });
   });
 
+  server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+      logger.error(`Port ${config.port} is already in use`, {
+        hint: 'Stop the other Node process or set a different PORT in .env',
+      });
+    } else {
+      logger.error('Server failed to start', { message: error.message });
+    }
+    process.exit(1);
+  });
+
   const shutdown = async (signal) => {
     logger.info('Shutdown signal received', { signal });
     server.close(async () => {

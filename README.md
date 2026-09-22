@@ -9,13 +9,37 @@ REST API for creating email campaigns, managing recipients, scheduling sends, an
 - MySQL connection pool (`mysql2`)
 - Structured logging, JSON errors, health endpoints
 
-## Step 2 — Database schema & migrations (current)
+## Step 2 — Database schema & migrations (done)
 
 - SQL migration: `migrations/001_initial_schema.sql`
 - Migration runner: `npm run migrate` (tracks applied files in `schema_migrations`)
 - Design notes: [docs/DATABASE.md](docs/DATABASE.md)
 
-Tables: `campaigns`, `campaign_recipients`, `schema_migrations`.
+## Step 3 — Create campaign (current)
+
+`POST /api/campaigns` creates a campaign with status **`draft`**.
+
+**Request body (JSON):**
+
+| Field | Type | Required |
+|-------|------|----------|
+| `name` | string | yes (max 255) |
+| `subject` | string | yes (max 500) |
+| `senderEmail` | string | yes (valid email) |
+| `emailContent` | string | yes |
+| `scheduledAt` | string | yes (ISO 8601 date-time) |
+
+**Example:**
+
+```bash
+curl -X POST http://localhost:3000/api/campaigns \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"Spring Sale\",\"subject\":\"Hello\",\"senderEmail\":\"noreply@example.com\",\"emailContent\":\"<p>Hi</p>\",\"scheduledAt\":\"2026-12-01T10:00:00.000Z\"}"
+```
+
+**Success:** `201` with `{ "success": true, "data": { ... } }`.
+
+**Validation errors:** `400` with `{ "success": false, "error": { "code": "VALIDATION_ERROR", "message": "Validation failed", "details": [...] } }`.
 
 ## Prerequisites
 
@@ -45,12 +69,6 @@ Tables: `campaigns`, `campaign_recipients`, `schema_migrations`.
    ```
 
 4. Start the server:
-
-   ```bash
-   npm run dev
-   ```
-
-   Or for production-style start:
 
    ```bash
    npm start
@@ -95,7 +113,7 @@ src/
 
 1. Initial setup — **done**
 2. Database schema & migrations — **done**
-3. Campaign create & validation
+3. Campaign create & validation — **done**
 4. Recipients API
 5. Schedule & process simulation
 6. Listing, details & statistics
