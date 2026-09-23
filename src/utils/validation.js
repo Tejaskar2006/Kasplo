@@ -88,8 +88,41 @@ function validateCreateCampaignBody(body) {
   };
 }
 
+function validateCreateRecipientBody(body) {
+  const errors = [];
+  const payload = body && typeof body === 'object' && !Array.isArray(body) ? body : null;
+
+  if (!payload) {
+    return {
+      valid: false,
+      errors: [{ field: 'body', message: 'Request body must be a JSON object' }],
+    };
+  }
+
+  if (!isNonEmptyString(payload.name)) {
+    errors.push({ field: 'name', message: 'Recipient name is required' });
+  } else if (payload.name.trim().length > 255) {
+    errors.push({ field: 'name', message: 'Recipient name must be at most 255 characters' });
+  }
+
+  errors.push(...validateEmail(payload.email, 'email'));
+
+  if (errors.length > 0) {
+    return { valid: false, errors };
+  }
+
+  return {
+    valid: true,
+    data: {
+      name: payload.name.trim(),
+      email: payload.email.trim().toLowerCase(),
+    },
+  };
+}
+
 module.exports = {
   validateCreateCampaignBody,
+  validateCreateRecipientBody,
   validateEmail,
   isNonEmptyString,
 };
