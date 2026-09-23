@@ -8,6 +8,16 @@ async function createCampaign(req, res) {
   });
 }
 
+async function scheduleCampaign(req, res) {
+  const { id } = req.params;
+  const campaign = await campaignService.scheduleCampaign(id);
+  res.json({
+    success: true,
+    data: campaign,
+  });
+}
+
 module.exports = {
   createCampaign,
+  scheduleCampaign,
 };

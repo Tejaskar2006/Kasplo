@@ -27,7 +27,55 @@ async function findCampaignById(id) {
   return rows[0] ?? null;
 }
 
+async function updateCampaignStatus(id, newStatus, currentStatus) {
+  const pool = getPool();
+  const [result] = await pool.query(
+    'UPDATE campaigns SET status = ? WHERE id = ? AND status = ?',
+    [newStatus, id, currentStatus]
+  );
+  return result.affectedRows > 0;
+}
+
+async function claimDueCampaign() {
+  const pool = getPool();
+  
+  // Find a single due campaign that is scheduled
+  const [rows] = await pool.query(
+    'SELECT id FROM campaigns WHERE status = "scheduled" AND scheduled_at <= UTC_TIMESTAMP() ORDER BY scheduled_at ASC LIMIT 1'
+  );
+  
+  if (rows.length === 0) {
+    return null; // No due campaigns
+  }
+  
+  const campaignId = rows[0].id;
+  
+  // Try to claim it
+  const [updateResult] = await pool.query(
+    'UPDATE campaigns SET status = "processing" WHERE id = ? AND status = "scheduled"',
+    [campaignId]
+  );
+  
+  if (updateResult.affectedRows === 1) {
+    return findCampaignById(campaignId);
+  }
+  
+  // Another worker claimed it first
+  return null;
+}
+
+async function markCampaignCompleted(id) {
+  const pool = getPool();
+  await pool.query(
+    'UPDATE campaigns SET status = "completed", completed_at = UTC_TIMESTAMP() WHERE id = ?',
+    [id]
+  );
+}
+
 module.exports = {
   insertCampaign,
   findCampaignById,
+  updateCampaignStatus,
+  claimDueCampaign,
+  markCampaignCompleted,
 };

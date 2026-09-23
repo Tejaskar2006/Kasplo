@@ -2,6 +2,7 @@ const { loadEnv } = require('./config/env');
 const { createPool, closePool } = require('./config/database');
 const { createLogger } = require('./utils/logger');
 const { createApp } = require('./app');
+const { startWorker, stopWorker } = require('./worker/campaign.processor');
 
 let logger;
 
@@ -17,6 +18,9 @@ async function start() {
       port: config.port,
       nodeEnv: config.nodeEnv,
     });
+    
+    // Start background worker for campaign processing
+    startWorker(5000);
   });
 
   server.on('error', (error) => {
@@ -32,6 +36,7 @@ async function start() {
 
   const shutdown = async (signal) => {
     logger.info('Shutdown signal received', { signal });
+    stopWorker();
     server.close(async () => {
       try {
         await closePool();

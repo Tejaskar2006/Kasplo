@@ -25,7 +25,16 @@ async function findRecipientById(id) {
   return rows[0] ?? null;
 }
 
+async function markRecipientsAsProcessed(campaignId) {
+  const pool = getPool();
+  await pool.query(
+    'UPDATE campaign_recipients SET delivery_status = "delivered", processed_at = UTC_TIMESTAMP() WHERE campaign_id = ? AND delivery_status = "pending"',
+    [campaignId]
+  );
+}
+
 module.exports = {
   insertRecipient,
   findRecipientById,
+  markRecipientsAsProcessed,
 };

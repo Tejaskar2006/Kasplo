@@ -46,6 +46,12 @@ async function addRecipient(campaignId, body) {
   }
 }
 
+async function processRecipientsForCampaign(campaignId) {
+  // Update all pending recipients for this campaign to delivered
+  await recipientRepository.markRecipientsAsProcessed(campaignId);
+}
+
 module.exports = {
   addRecipient,
+  processRecipientsForCampaign,
 };
