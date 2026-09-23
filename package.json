@@ -7,16 +7,25 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "migrate": "node scripts/migrate.js",
-    "test": "echo \"Tests will be added in a later step\" && exit 0"
+    "test": "jest"
   },
   "engines": {
     "node": ">=18"
   },
-  "keywords": ["email", "campaign", "api", "express", "mysql"],
+  "keywords": [
+    "email",
+    "campaign",
+    "api",
+    "express",
+    "mysql"
+  ],
   "license": "UNLICENSED",
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mysql2": "^3.14.0"
+  },
+  "devDependencies": {
+    "jest": "^30.5.2"
   }
 }

@@ -51,7 +51,19 @@ async function processRecipientsForCampaign(campaignId) {
   await recipientRepository.markRecipientsAsProcessed(campaignId);
 }
 
+async function getRecipients(campaignId) {
+  // Ensure campaign exists
+  const campaign = await campaignRepository.findCampaignById(campaignId);
+  if (!campaign) {
+    throw new AppError('Campaign not found', { statusCode: 404, code: 'NOT_FOUND' });
+  }
+
+  const rows = await recipientRepository.findRecipientsByCampaignId(campaignId);
+  return rows.map(toRecipientResponse);
+}
+
 module.exports = {
   addRecipient,
   processRecipientsForCampaign,
+  getRecipients,
 };

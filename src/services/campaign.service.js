@@ -54,8 +54,32 @@ async function processDueCampaigns(recipientService) {
   }
 }
 
+async function getCampaigns() {
+  const rows = await campaignRepository.findAllCampaigns();
+  return rows.map(toCampaignResponse);
+}
+
+async function getCampaignDetails(id) {
+  const campaign = await campaignRepository.findCampaignById(id);
+  if (!campaign) {
+    throw new AppError('Campaign not found', { statusCode: 404, code: 'NOT_FOUND' });
+  }
+  return toCampaignResponse(campaign);
+}
+
+async function getCampaignStatistics(id) {
+  const campaign = await campaignRepository.findCampaignById(id);
+  if (!campaign) {
+    throw new AppError('Campaign not found', { statusCode: 404, code: 'NOT_FOUND' });
+  }
+  return campaignRepository.getCampaignStatistics(id);
+}
+
 module.exports = {
   createCampaign,
   scheduleCampaign,
   processDueCampaigns,
+  getCampaigns,
+  getCampaignDetails,
+  getCampaignStatistics,
 };

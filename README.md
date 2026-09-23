@@ -114,10 +114,10 @@ src/
 1. Initial setup — **done**
 2. Database schema & migrations — **done**
 3. Campaign create & validation — **done**
-4. Recipients API
-5. Schedule & process simulation
-6. Listing, details & statistics
-7. Automated tests & polish
+4. Recipients API — **done**
+5. Schedule & process simulation — **done**
+6. Listing, details & statistics — **done**
+7. Automated tests & polish — **done**
 
 ## License
 

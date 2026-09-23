@@ -72,10 +72,40 @@ async function markCampaignCompleted(id) {
   );
 }
 
+async function findAllCampaigns() {
+  const pool = getPool();
+  const [rows] = await pool.query(
+    'SELECT * FROM campaigns ORDER BY created_at DESC'
+  );
+  return rows;
+}
+
+async function getCampaignStatistics(id) {
+  const pool = getPool();
+  const [rows] = await pool.query(
+    `SELECT delivery_status, COUNT(*) as count 
+     FROM campaign_recipients 
+     WHERE campaign_id = ? 
+     GROUP BY delivery_status`,
+    [id]
+  );
+  
+  // Format the result as a simple object { pending: 0, delivered: 0, failed: 0 }
+  const stats = { pending: 0, delivered: 0, failed: 0, total: 0 };
+  for (const row of rows) {
+    stats[row.delivery_status] = parseInt(row.count, 10);
+    stats.total += stats[row.delivery_status];
+  }
+  
+  return stats;
+}
+
 module.exports = {
   insertCampaign,
   findCampaignById,
   updateCampaignStatus,
   claimDueCampaign,
   markCampaignCompleted,
+  findAllCampaigns,
+  getCampaignStatistics,
 };

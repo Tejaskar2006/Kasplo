@@ -33,8 +33,18 @@ async function markRecipientsAsProcessed(campaignId) {
   );
 }
 
+async function findRecipientsByCampaignId(campaignId) {
+  const pool = getPool();
+  const [rows] = await pool.query(
+    'SELECT * FROM campaign_recipients WHERE campaign_id = ? ORDER BY id ASC',
+    [campaignId]
+  );
+  return rows;
+}
+
 module.exports = {
   insertRecipient,
   findRecipientById,
   markRecipientsAsProcessed,
+  findRecipientsByCampaignId,
 };

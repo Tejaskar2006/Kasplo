@@ -10,6 +10,17 @@ async function addRecipient(req, res) {
   });
 }
 
+async function listRecipients(req, res) {
+  const { id: campaignId } = req.params;
+  const recipients = await recipientService.getRecipients(campaignId);
+  
+  res.json({
+    success: true,
+    data: recipients,
+  });
+}
+
 module.exports = {
   addRecipient,
+  listRecipients,
 };
